@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>관리자 포털</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+        }
+
+        .header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .nav-item {
+            padding: 10px 20px;
+            background-color: #34495e;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+            font-weight: 500;
+        }
+
+        .nav-item:hover {
+            background-color: #3498db;
+        }
+
+        .nav-item.active {
+            background-color: #3498db;
+        }
+
+        .nav-item.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .nav-item.disabled:hover {
+            background-color: #34495e;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 0 20px;
+        }
+
+        .welcome-box {
+            background: white;
+            border-radius: 8px;
+            padding: 40px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .welcome-box h2 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
+
+        .welcome-box p {
+            color: #7f8c8d;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+<div class="header">
+    <div class="header-content">
+        <h1>Admin Management System</h1>
+        <nav class="nav-menu">
+            <a href="/" class="nav-item active">홈</a>
+            <a href="/banners" class="nav-item">배너 관리</a>
+            <a href="#" class="nav-item disabled">수강후기</a>
+            <a href="#" class="nav-item disabled">공지사항</a>
+            <a href="#" class="nav-item disabled">FAQ</a>
+        </nav>
+    </div>
+</div>
+
+<div class="container">
+    <div class="welcome-box">
+        <h2>관리자 포털에 오신 것을 환영합니다</h2>
+        <p>상단 메뉴에서 관리하실 항목을 선택해주세요</p>
+    </div>
+</div>
+</body>
+</html>
