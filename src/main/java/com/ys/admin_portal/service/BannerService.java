@@ -2,19 +2,21 @@ package com.ys.admin_portal.service;
 
 import com.ys.admin_portal.domain.Banner;
 import com.ys.admin_portal.domain.Course;
-import com.ys.admin_portal.dto.BannerUpdateDto;
 import com.ys.admin_portal.repository.BannerRepository;
+import com.ys.admin_portal.util.FileUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Transactional(readOnly = true) // 모든 메서드가 기본적으로 readOnly = true -> 조회전용 최적화
 public class BannerService {
 
     private final BannerRepository bannerRepository;
+    private final FileUtil fileUtil;
 
     // 전체 조회
     public List<Banner> findAll() {
@@ -33,18 +35,43 @@ public class BannerService {
 
     // 등록
     @Transactional
-    public Long save(Banner banner) {
-        Banner saved = bannerRepository.save(banner);
-        return saved.getId();
+    public Long register(Banner banner, MultipartFile pcImage, MultipartFile mobileImage, MultipartFile video) throws IOException {
+
+        // 파일 저장
+        banner.setPcImageUrl(fileUtil.save(pcImage));
+        banner.setMobileImageUrl(fileUtil.save(mobileImage));
+
+        if (video != null && !video.isEmpty()) {
+            banner.setVideoUrl(fileUtil.save(video));
+        }
+
+        banner.setCreatedBy("admin");
+
+        return bannerRepository.save(banner).getId();
     }
 
     //수정
     @Transactional
-    public void update(Long id, BannerUpdateDto dto) {
+    public void update(Long id, Banner updatedBanner,
+                       MultipartFile pcImage, MultipartFile mobileImage) throws IOException {
         Banner banner = bannerRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("배너를 찾을 수 없습니다. id=" + id));
 
-        banner.update(dto);
+        // 파일이 새로 업로드되면 교체
+        if(pcImage != null && !pcImage.isEmpty()) {
+            banner.setPcImageUrl(fileUtil.save(pcImage));
+        }
+
+        if(mobileImage != null && !mobileImage.isEmpty()) {
+            banner.setMobileImageUrl(fileUtil.save(mobileImage));
+        }
+
+        // 나머지 필드 수정
+        banner.setCourse(updatedBanner.getCourse());
+        banner.setLink(updatedBanner.getLink());
+        banner.setIsDeploy(updatedBanner.getIsDeploy());
+
+        // Dirty Checking으로 자동 UPDATE
     }
 
     // 삭제 (논리 삭제)
