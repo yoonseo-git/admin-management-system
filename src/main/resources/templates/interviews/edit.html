@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>수강후기 등록</title>
+    <title>협력사 인터뷰 수정</title>
     <style>
         * {
             margin: 0;
@@ -97,7 +97,7 @@
         }
 
         .form-group input[type="text"],
-        .form-group select,
+        .form-group input[type="file"],
         .form-group textarea {
             width: 100%;
             padding: 10px;
@@ -113,16 +113,19 @@
         }
 
         .form-group input:focus,
-        .form-group select:focus,
         .form-group textarea:focus {
             outline: none;
             border-color: #3498db;
         }
 
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
+        .current-image {
+            margin-top: 10px;
+        }
+
+        .current-image img {
+            max-width: 200px;
+            border-radius: 4px;
+            border: 2px solid #ddd;
         }
 
         .form-actions {
@@ -172,71 +175,74 @@
 </head>
 <body>
 <!-- 헤더 (메뉴바) -->
-<div th:replace="~{fragments/header :: header('reviews')}"></div>
+<div th:replace="~{fragments/header :: header('companyInterviews')}"></div>
 
 <div class="container">
     <!-- 페이지 헤더 -->
     <div class="page-header">
-        <h2 class="page-title">⭐ 수강후기 등록</h2>
+        <h2 class="page-title">🎤 협력사 인터뷰 수정</h2>
     </div>
 
-    <!-- 등록 폼 -->
+    <!-- 수정 폼 -->
     <div class="form-container">
-        <form action="/reviews/new" method="post">
+        <form th:action="@{/companyInterviews/{id}/edit(id=${interview.id})}"
+              method="post"
+              enctype="multipart/form-data">
 
-            <!-- 과정 선택 -->
+            <!-- 제목 -->
             <div class="form-group">
-                <label for="division">
-                    과정 <span class="required">*</span>
+                <label for="title">
+                    제목 <span class="required">*</span>
                 </label>
-                <select id="division" name="division" required>
-                    <option value="">과정을 선택하세요</option>
-                    <option th:each="division : ${divisions}"
-                            th:value="${division}"
-                            th:text="${division.koreanName}">
-                    </option>
-                </select>
+                <input type="text"
+                       id="title"
+                       name="title"
+                       th:value="${interview.title}"
+                       maxlength="124"
+                       required>
             </div>
 
-            <!-- 수강 년월 -->
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="year">
-                        수강 연도 <span class="required">*</span>
-                    </label>
-                    <input type="text"
-                           id="year"
-                           name="year"
-                           placeholder="예: 2024"
-                           maxlength="4"
-                           required>
-                    <div class="help-text">4자리 숫자 (예: 2024)</div>
-                </div>
-
-                <div class="form-group">
-                    <label for="month">
-                        수강 월 <span class="required">*</span>
-                    </label>
-                    <input type="text"
-                           id="month"
-                           name="month"
-                           placeholder="예: 11"
-                           maxlength="2"
-                           required>
-                    <div class="help-text">1~12 사이의 숫자</div>
-                </div>
+            <!-- 회사명 -->
+            <div class="form-group">
+                <label for="company">
+                    회사명 <span class="required">*</span>
+                </label>
+                <input type="text"
+                       id="company"
+                       name="company"
+                       th:value="${interview.company}"
+                       maxlength="64"
+                       required>
             </div>
 
-            <!-- 후기 내용 -->
+            <!-- 인터뷰 내용 -->
             <div class="form-group">
                 <label for="content">
-                    후기 내용 <span class="required">*</span>
+                    인터뷰 내용 <span class="required">*</span>
                 </label>
                 <textarea id="content"
                           name="content"
-                          placeholder="수강 후기를 작성해주세요"
+                          th:text="${interview.content}"
                           required></textarea>
-                <div class="help-text">수강하신 소감을 자유롭게 작성해주세요</div>
+            </div>
+
+            <!-- 썸네일 이미지 -->
+            <div class="form-group">
+                <label for="thumbnailFile">
+                    썸네일 이미지
+                </label>
+                <input type="file"
+                       id="thumbnailFile"
+                       name="thumbnailFile"
+                       accept="image/*">
+                <div class="help-text">새 이미지를 선택하지 않으면 기존 이미지가 유지됩니다</div>
+
+                <!-- 현재 이미지 표시 -->
+                <div class="current-image" th:if="${interview.thumbNailUrl != null}">
+                    <p style="margin-top: 10px; font-size: 12px; color: #7f8c8d;">현재 이미지:</p>
+                    <img th:src="@{'/uploads/' + ${interview.thumbNailUrl}}"
+                         alt="현재 썸네일">
+                </div>
             </div>
 
             <!-- 작성자 -->
@@ -247,15 +253,15 @@
                 <input type="text"
                        id="regId"
                        name="regId"
-                       placeholder="작성자 이름"
-                       maxlength="20"
+                       th:value="${interview.regId}"
+                       maxlength="45"
                        required>
             </div>
 
             <!-- 버튼 -->
             <div class="form-actions">
-                <a href="/reviews" class="btn btn-secondary">취소</a>
-                <button type="submit" class="btn btn-primary">등록</button>
+                <a href="/companyInterviews" class="btn btn-secondary">취소</a>
+                <button type="submit" class="btn btn-primary">수정</button>
             </div>
         </form>
     </div>

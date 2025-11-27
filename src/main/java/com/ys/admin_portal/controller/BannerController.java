@@ -42,7 +42,10 @@ public class BannerController {
 
     // 등록 폼
     @GetMapping("/new")
-    public String createForm() {
+    public String createForm(Model model) {
+
+        model.addAttribute("courses", Course.values());
+
         return "banner/form";
     }
 
@@ -74,6 +77,7 @@ public class BannerController {
     public String editForm(@PathVariable Long id, Model model) {
         Banner banner = bannerService.findById(id);
         model.addAttribute("banner", banner);
+        model.addAttribute("courses", Course.values());
         return "banner/edit";
     }
 
@@ -88,6 +92,14 @@ public class BannerController {
     ) throws IOException {
 
         bannerService.update(id, banner, pcImage, mobileImage);
+        return "redirect:/banners";
+    }
+
+    // 배포 상태 토글
+    @PostMapping("/{id}/toggle-deploy")
+    public String toggleDeploy(@PathVariable Long id) {
+        bannerService.toggleDeploy(id);
+
         return "redirect:/banners";
     }
 

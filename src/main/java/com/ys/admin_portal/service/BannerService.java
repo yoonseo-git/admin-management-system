@@ -28,9 +28,19 @@ public class BannerService {
         return bannerRepository.findByCourse(course);
     }
 
+    /*
+          findById(id).orElseThrow(...)
+          Optional<Banner> 반환 → 값이 있을 수도, 없을 수도 있음
+          orElseThrow(): 값이 없으면 예외 발생
+     */
     // 단건 조회
     public Banner findById(Long id) {
         return bannerRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("배너를 찾을 수 없습니다. id: " + id));
+    }
+
+    // 필터링 조회
+    public List<Banner> findByFilters(Course course, Boolean isDeploy) {
+        return bannerRepository.findByFilters(course, isDeploy);
     }
 
     // 등록
@@ -52,10 +62,8 @@ public class BannerService {
 
     //수정
     @Transactional
-    public void update(Long id, Banner updatedBanner,
-                       MultipartFile pcImage, MultipartFile mobileImage) throws IOException {
-        Banner banner = bannerRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("배너를 찾을 수 없습니다. id=" + id));
+    public void update(Long id, Banner updatedBanner, MultipartFile pcImage, MultipartFile mobileImage) throws IOException {
+        Banner banner = findById(id);
 
         // 파일이 새로 업로드되면 교체
         if(pcImage != null && !pcImage.isEmpty()) {
@@ -77,22 +85,26 @@ public class BannerService {
     // 삭제 (논리 삭제)
     @Transactional
     public void delete(Long id) {
-        /*
-        * findById(id).orElseThrow(...)
-          Optional<Banner> 반환 → 값이 있을 수도, 없을 수도 있음
-          orElseThrow(): 값이 없으면 예외 발생
-        * */
-        Banner banner = bannerRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("배너를 찾을 수 없습니다. id=" + id));
+        Banner banner = findById(id);
 
-        banner.setIsDeleted(true);
+        banner.delete();
         // JPA의 dirty checking으로 자동 UPDATE
         // @Transactional이 있어서 메서드 종료 시 자동 저장됨
     }
 
-    // 필터링 조회
-    public List<Banner> findByFilters(Course course, Boolean isDeploy) {
-        return bannerRepository.findByFilters(course, isDeploy);
+    // 배포 상태 토글
+    @Transactional
+    public void toggleDeploy(Long id) {
+        Banner banner = findById(id);
+
+        if (banner.getIsDeploy()) {
+            banner.undeploy();
+        } else  {
+            banner.deploy();
+        }
+
     }
+
+
 
 }

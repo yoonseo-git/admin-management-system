@@ -14,7 +14,7 @@ import java.util.List;
 @Controller
 @RequestMapping("/companyInterviews")
 @RequiredArgsConstructor
-public class CompanyController {
+public class CompanyInterviewController {
 
     private final CompanyInterviewService companyInterviewService;
 
@@ -23,7 +23,6 @@ public class CompanyController {
     public String list(
             @RequestParam(required = false) Boolean isDeploy,
             Model model) {
-
         List<CompanyInterview> interviews = companyInterviewService.findByFilters(isDeploy);
         model.addAttribute("interviews", interviews);
         model.addAttribute("selectedDeploy", isDeploy);
@@ -45,6 +44,25 @@ public class CompanyController {
             @RequestParam("thumbnailFile") MultipartFile thumbnailFile) throws IOException {
 
         companyInterviewService.register(companyInterview, thumbnailFile);
+
+        return "redirect:/companyInterviews";
+    }
+
+    // 수정 폼
+    @GetMapping("/{id}/edit")
+    public String editForm(@PathVariable Long id, Model model) {
+        CompanyInterview interview = companyInterviewService.findOne(id);
+        model.addAttribute("interview", interview);
+
+        return "/interviews/edit";
+    }
+
+    // 수정
+    @PostMapping("/{id}/edit")
+    public String edit(@PathVariable Long id,
+                       @ModelAttribute CompanyInterview companyInterview,
+                       @RequestParam(value = "thumbnailFile", required = false) MultipartFile thumbnailFile) throws IOException {
+        companyInterviewService.update(id, companyInterview, thumbnailFile);
 
         return "redirect:/companyInterviews";
     }

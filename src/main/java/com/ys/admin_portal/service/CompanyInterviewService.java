@@ -19,6 +19,7 @@ public class CompanyInterviewService {
     private final CompanyInterviewRepository companyInterviewRepository;
     private final FileUtil fileUtil;
 
+
     // 필터링 조회
     public List<CompanyInterview> findByFilters(Boolean isDeploy) {
         return companyInterviewRepository.findByFilters(isDeploy);
@@ -42,6 +43,26 @@ public class CompanyInterviewService {
 
         return companyInterviewRepository.save(companyInterview).getId();
     }
+
+    // 수정
+    @Transactional
+    public void update(Long id, CompanyInterview ci, MultipartFile thumbnailFile) throws IOException {
+
+        CompanyInterview interview = findOne(id);
+
+        // 파일이 새로 업로드되면 교체
+        if (thumbnailFile != null && !thumbnailFile.isEmpty()) {
+            interview.setThumbNailUrl(fileUtil.save(thumbnailFile));
+        }
+
+        interview.setTitle(ci.getTitle());
+        interview.setCompany(ci.getCompany());
+        interview.setContent(ci.getContent());
+        interview.setRegId(ci.getRegId());
+
+        // Dirty Checking
+    }
+
 
     // 삭제
     @Transactional

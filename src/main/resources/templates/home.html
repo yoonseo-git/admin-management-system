@@ -94,18 +94,7 @@
     </style>
 </head>
 <body>
-<div class="header">
-    <div class="header-content">
-        <h1>Admin Management System</h1>
-        <nav class="nav-menu">
-            <a href="/" class="nav-item active">홈</a>
-            <a href="/banners" class="nav-item">배너 관리</a>
-            <a href="/reviews" class="nav-item">수강후기</a>
-            <a href="/companyInterviews" class="nav-item">협력사인터뷰</a>
-            <a href="#" class="nav-item disabled">FAQ</a>
-        </nav>
-    </div>
-</div>
+<div th:replace="~{fragments/header :: header('home')}"></div>
 
 <div class="container">
     <div class="welcome-box">

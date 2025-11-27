@@ -11,8 +11,6 @@ import java.time.LocalDateTime;
 @Table(name = "banners") // DB테이블 이름을 "banners"로 지정 (생략하면 클래스이름(Banner)을 테이블명으로 사용
 @Getter @Setter // 모든 필드의 getter, setter 자동 생성
 @NoArgsConstructor(access = AccessLevel.PROTECTED) // JPA가 객체 생성할 때 필요, 외부에서 new Banner()막음(직접 생성 방지)
-@AllArgsConstructor
-@Builder
 public class Banner {
 
     @Id // 이 필드가 Primary Key(PK)
@@ -52,22 +50,10 @@ public class Banner {
     @Column(length = 50)
     private String updatedBy;
 
-    // soft delete를 위한 setter
-    public void setIsDeleted(boolean isDeleted) {
-        this.isDeleted = isDeleted;
-    }
+
 
     @PrePersist // DB에 INSERT 되기 직전에 자동 실행, 생성 시각 자동 입력
     protected void onCreate() {
-
-        if(this.isDeleted == null) {
-            this.isDeleted = false;
-        }
-
-        if(this.isDeploy == null) {
-            this.isDeploy = false;
-        }
-
         createdAt = LocalDateTime.now();
         updatedAt = LocalDateTime.now();
     }
@@ -75,6 +61,22 @@ public class Banner {
     @PreUpdate // DB에 UPDATE 되기 직전에 자동 실행, 수정 시각 자동 갱신
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
+    }
+
+    // 비지니스 로직
+
+    // 배포상태 토글
+    public void deploy() {
+        this.isDeploy = true;
+    }
+
+    public void undeploy() {
+        this.isDeploy = false;
+    }
+
+    // soft delete를 위한 setter
+    public void delete() {
+        this.isDeleted = true;
     }
 
 }

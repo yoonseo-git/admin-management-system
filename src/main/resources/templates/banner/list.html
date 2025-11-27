@@ -2,7 +2,8 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>배너 목록</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>배너 관리</title>
     <style>
         * {
             margin: 0;
@@ -13,125 +14,163 @@
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f5f5f5;
-            padding: 20px;
+        }
+
+        .header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .nav-item {
+            padding: 10px 20px;
+            background-color: #34495e;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+            font-weight: 500;
+        }
+
+        .nav-item:hover {
+            background-color: #3498db;
+        }
+
+        .nav-item.active {
+            background-color: #3498db;
         }
 
         .container {
             max-width: 1200px;
-            margin: 0 auto;
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin: 30px auto;
+            padding: 0 20px;
         }
 
-        h1 {
-            color: #333;
-            margin-bottom: 30px;
-            padding-bottom: 15px;
-            border-bottom: 3px solid #4CAF50;
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
         }
 
-        /* 필터 영역 */
+        .page-title {
+            font-size: 24px;
+            color: #2c3e50;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+
+        .btn-success {
+            background-color: #2ecc71;
+            color: white;
+        }
+
+        .btn-danger {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        .btn-warning {
+            background-color: #f39c12;
+            color: white;
+        }
+
+        .btn-sm {
+            padding: 5px 10px;
+            font-size: 12px;
+        }
+
         .filter-section {
-            background-color: #f9f9f9;
+            background: white;
             padding: 20px;
             border-radius: 8px;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .filter-form {
             display: flex;
-            gap: 15px;
+            gap: 10px;
             align-items: center;
             flex-wrap: wrap;
         }
 
-        .filter-group {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .filter-group label {
-            font-weight: 600;
-            color: #555;
-        }
-
-        .filter-group select {
+        .filter-form select {
             padding: 8px 12px;
             border: 1px solid #ddd;
-            border-radius: 5px;
+            border-radius: 4px;
             font-size: 14px;
-            cursor: pointer;
         }
 
-        .btn-filter {
-            padding: 8px 20px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: 600;
+        .table-container {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            overflow: hidden;
         }
 
-        .btn-filter:hover {
-            background-color: #45a049;
-        }
-
-        .btn-reset {
-            padding: 8px 20px;
-            background-color: #f1f1f1;
-            color: #333;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: 600;
-        }
-
-        .btn-reset:hover {
-            background-color: #e0e0e0;
-        }
-
-        /* 버튼 영역 */
-        .action-bar {
-            display: flex;
-            justify-content: flex-end;
-            margin-bottom: 20px;
-        }
-
-        .btn-new {
-            padding: 10px 20px;
-            background-color: #4CAF50;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            font-weight: 600;
-        }
-
-        .btn-new:hover {
-            background-color: #45a049;
-        }
-
-        /* 테이블 */
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
+        }
+
+        thead {
+            background-color: #34495e;
+            color: white;
         }
 
         th, td {
-            padding: 12px;
+            padding: 15px;
             text-align: left;
-            border-bottom: 1px solid #ddd;
         }
 
         th {
-            background-color: #4CAF50;
-            color: white;
             font-weight: 600;
+            font-size: 14px;
         }
 
-        tr:hover {
-            background-color: #f5f5f5;
+        tbody tr {
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        tbody tr:hover {
+            background-color: #f8f9fa;
         }
 
         img {
@@ -139,29 +178,49 @@
             border: 2px solid #ddd;
         }
 
-        .action-links a {
-            margin-right: 10px;
-            color: #4CAF50;
-            text-decoration: none;
-            font-weight: 600;
+        .badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
         }
 
-        .action-links a:hover {
-            text-decoration: underline;
+        .badge-success {
+            background-color: #d4edda;
+            color: #155724;
         }
 
-        .action-links a.delete {
-            color: #f44336;
+        .badge-secondary {
+            background-color: #e2e3e5;
+            color: #383d41;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 5px;
+        }
+
+        .empty-message {
+            text-align: center;
+            padding: 40px;
+            color: #7f8c8d;
         }
     </style>
 </head>
 <body>
-<div class="container">
-    <h1>배너 목록</h1>
+<!-- 헤더 (메뉴바) -->
+<div th:replace="~{fragments/header :: header('banners')}"></div>
 
-    <!-- 필터 영역 -->
-    <form class="filter-section" method="get" th:action="@{/banners}">
-        <div class="filter-group">
+<div class="container">
+    <!-- 페이지 헤더 -->
+    <div class="page-header">
+        <h2 class="page-title">🎨 배너 관리</h2>
+        <a href="/banners/new" class="btn btn-primary">+ 배너 등록</a>
+    </div>
+
+    <!-- 필터 섹션 -->
+    <div class="filter-section">
+        <form class="filter-form" method="get" th:action="@{/banners}">
             <label>과정:</label>
             <select name="course">
                 <option value="">전체</option>
@@ -170,58 +229,79 @@
                 <option value="MEDIA" th:selected="${selectedCourse == 'MEDIA'}">미디어</option>
                 <option value="BUSAN" th:selected="${selectedCourse == 'BUSAN'}">부산</option>
             </select>
-        </div>
 
-        <div class="filter-group">
             <label>배포상태:</label>
             <select name="isDeploy">
                 <option value="">전체</option>
                 <option value="true" th:selected="${selectedDeploy == true}">배포중</option>
                 <option value="false" th:selected="${selectedDeploy == false}">미배포</option>
             </select>
-        </div>
 
-        <button type="submit" class="btn-filter">검색</button>
-        <a th:href="@{/banners}" class="btn-reset">초기화</a>
-    </form>
-
-    <!-- 등록 버튼 -->
-    <div class="action-bar">
-        <a th:href="@{/banners/new}" class="btn-new">배너 등록</a>
+            <button type="submit" class="btn btn-primary">검색</button>
+            <a th:href="@{/banners}" class="btn btn-warning">초기화</a>
+        </form>
     </div>
 
     <!-- 테이블 -->
-    <table>
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>과정</th>
-            <th>PC 이미지</th>
-            <th>배포 여부</th>
-            <th>작업</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="banner : ${banners}">
-            <td th:text="${banner.id}"></td>
-            <td th:text="${banner.course}"></td>
-            <td>
-                <img th:if="${banner.pcImageUrl != null}"
-                     th:src="@{'/uploads/' + ${banner.pcImageUrl}}"
-                     alt="PC 배너"
-                     style="max-width: 150px; max-height: 80px; object-fit: cover;">
-                <span th:if="${banner.pcImageUrl == null}">없음</span>
-            </td>
-            <td th:text="${banner.isDeploy ? '배포중' : '미배포'}"></td>
-            <td class="action-links">
-                <a th:href="@{/banners/{id}/edit(id=${banner.id})}">수정</a>
-                <a th:href="@{/banners/{id}/delete(id=${banner.id})}"
-                   class="delete"
-                   onclick="return confirm('정말 삭제하시겠습니까?');">삭제</a>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+    <div class="table-container">
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>과정</th>
+                <th>PC 이미지</th>
+                <th>작성자</th>
+                <th>등록일</th>
+                <th>배포상태</th>
+                <th>관리</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${#lists.isEmpty(banners)}">
+                <td colspan="5">
+                    <div class="empty-message">
+                        등록된 배너가 없습니다.
+                    </div>
+                </td>
+            </tr>
+            <tr th:each="banner : ${banners}">
+                <td th:text="${banner.id}"></td>
+                <td th:text="${banner.course}"></td>
+                <td>
+                    <img th:if="${banner.pcImageUrl != null}"
+                         th:src="@{'/uploads/' + ${banner.pcImageUrl}}"
+                         alt="PC 배너"
+                         style="max-width: 150px; max-height: 80px; object-fit: cover;">
+                    <span th:if="${banner.pcImageUrl == null}">없음</span>
+                </td>
+                <td th:text="${banner.createdBy}">admin</td>
+                <td th:text="${#temporals.format(banner.createdAt, 'yyyy-MM-dd HH:mm')}">2024-11-25 10:00</td>
+                <td>
+                    <span th:if="${banner.isDeploy}" class="badge badge-success">배포중</span>
+                    <span th:unless="${banner.isDeploy}" class="badge badge-secondary">미배포</span>
+                </td>
+                <td>
+                    <div class="action-buttons">
+                        <a th:href="@{/banners/{id}/edit(id=${banner.id})}" class="btn btn-primary btn-sm">수정</a>
+
+                        <form th:action="@{/banners/{id}/toggle-deploy(id=${banner.id})}"
+                                 method="post"
+                                 style="display: inline">
+                            <button type="submit" class="btn btn-success btn-sm">
+                                <span th:if="${banner.isDeploy}">미배포</span>
+                                <span th:unless="${banner.isDeploy}">배포</span>
+                            </button>
+                        </form>
+
+                        <a th:href="@{/banners/{id}/delete(id=${banner.id})}"
+                           class="btn btn-danger btn-sm"
+                           onclick="return confirm('정말 삭제하시겠습니까?');">삭제</a>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
 </body>
 </html>
