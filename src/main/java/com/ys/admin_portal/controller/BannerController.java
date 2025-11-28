@@ -22,19 +22,15 @@ public class BannerController {
     // 목록 조회 (필터 포함)
     @GetMapping
     public String list(
-            @RequestParam(value = "course", required = false) String courseStr,
+            @RequestParam(value = "course", required = false) Course course,
             @RequestParam(value = "isDeploy", required = false) Boolean isDeploy,
             Model model
     ) {
-        Course course = null;
-        if (courseStr != null && !courseStr.isEmpty()) {
-            course = Course.valueOf(courseStr);
-        }
 
         List<Banner> banners = bannerService.findByFilters(course, isDeploy);
 
         model.addAttribute("banners", banners);
-        model.addAttribute("selectedCourse", courseStr);
+        model.addAttribute("selectedCourse", course);
         model.addAttribute("selectedDeploy", isDeploy);
 
         return "banner/list";
