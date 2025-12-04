@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>공지사항 관리</title>
+    <title>FAQ 관리</title>
     <style>
         * {
             margin: 0;
@@ -173,29 +173,29 @@
             background-color: #f8f9fa;
         }
 
-        .title-cell {
+        .question-cell {
             display: flex;
             align-items: center;
             gap: 8px;
         }
 
-        .badge-important {
+        .badge-category {
             display: inline-block;
             padding: 2px 8px;
-            background-color: #e74c3c;
+            background-color: #9b59b6;
             color: white;
             border-radius: 4px;
             font-size: 11px;
             font-weight: 600;
         }
 
-        .title-link {
+        .question-link {
             color: #2c3e50;
             text-decoration: none;
             font-weight: 500;
         }
 
-        .title-link:hover {
+        .question-link:hover {
             color: #3498db;
             text-decoration: underline;
         }
@@ -231,18 +231,18 @@
 </head>
 <body>
 <!-- 헤더 (메뉴바) -->
-<div th:replace="~{fragments/header :: header('notices')}"></div>
+<div th:replace="~{fragments/header :: header('faqs')}"></div>
 
 <div class="container">
     <!-- 페이지 헤더 -->
     <div class="page-header">
-        <h2 class="page-title">공지사항 관리</h2>
-        <a href="/notices/new" class="btn btn-primary">+ 공지사항 등록</a>
+        <h2 class="page-title">FAQ 관리</h2>
+        <a href="/faqs/new" class="btn btn-primary">+ FAQ 등록</a>
     </div>
 
     <!-- 필터 섹션 -->
     <div class="filter-section">
-        <form class="filter-form" method="get" action="/notices">
+        <form class="filter-form" method="get" action="/faqs">
             <label>과정:</label>
             <select name="course">
                 <option value="">전체</option>
@@ -253,29 +253,24 @@
                 </option>
             </select>
 
-           <label>배포상태:</label>
+            <label>카테고리:</label>
+            <select name="category">
+                <option value="">전체</option>
+                <option value="수강신청" th:selected="${selectedCategory == '수강신청'}">수강신청</option>
+                <option value="결제" th:selected="${selectedCategory == '결제'}">결제</option>
+                <option value="환불" th:selected="${selectedCategory == '환불'}">환불</option>
+                <option value="기타" th:selected="${selectedCategory == '기타'}">기타</option>
+            </select>
+
+            <label>배포상태:</label>
             <select name="isPublished">
                 <option value="">전체</option>
                 <option value="true" th:selected="${selectedPublished == true}">배포</option>
                 <option value="false" th:selected="${selectedPublished == false}">미배포</option>
             </select>
 
-            <label>중요공지:</label>
-            <select name="isImportant">
-                <option value="">전체</option>
-                <option value="true" th:selected="${selectedImportant == true}">중요공지만</option>
-            </select>
-
-            <!-- 검색창 -->
-            <label>검색:</label>
-            <input type="text"
-                   name="keyword"
-                   th:value="${selectedKeyword}"
-                   placeholder="제목 또는 내용 검색"
-                   style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; width: 200px;">
-
             <button type="submit" class="btn btn-primary">검색</button>
-            <a href="/notices" class="btn btn-warning">초기화</a>
+            <a href="/faqs" class="btn btn-warning">초기화</a>
         </form>
     </div>
 
@@ -285,8 +280,9 @@
             <thead>
             <tr>
                 <th>NO</th>
-                <th>제목</th>
+                <th>질문</th>
                 <th>과정</th>
+                <th>카테고리</th>
                 <th>조회수</th>
                 <th>배포상태</th>
                 <th>등록일</th>
@@ -294,37 +290,37 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:if="${#lists.isEmpty(notices)}">
-                <td colspan="7">
+            <tr th:if="${#lists.isEmpty(faqs)}">
+                <td colspan="8">
                     <div class="empty-message">
-                        📭 등록된 공지사항이 없습니다.
+                        📭 등록된 FAQ가 없습니다.
                     </div>
                 </td>
             </tr>
-            <tr th:each="notice, stat : ${notices}">
+            <tr th:each="faq, stat : ${faqs}">
                 <td th:text="${stat.count}">1</td>
                 <td>
-                    <div class="title-cell">
-                        <span th:if="${notice.isImportant}" class="badge-important">중요</span>
-                        <a th:href="@{/notices/{id}(id=${notice.id})}"
-                           class="title-link"
-                           th:text="${notice.title}">공지사항 제목</a>
+                    <div class="question-cell">
+                        <span class="badge-category" th:text="${faq.category}">수강신청</span>
+                        <a th:href="@{/faqs/{id}(id=${faq.id})}"
+                           class="question-link"
+                           th:text="${faq.question}">질문 내용</a>
                     </div>
                 </td>
-                <!-- 과정 표시 부분 -->
                 <td>
-                    <span th:text="${notice.course.description}"></span>
+                    <span th:text="${faq.course.description}"></span>
                 </td>
-                <td th:text="${notice.viewCount}">0</td>
+                <td th:text="${faq.category}">수강신청</td>
+                <td th:text="${faq.viewCount}">0</td>
                 <td>
-                    <span th:if="${notice.isPublished}" class="badge badge-success">배포</span>
-                    <span th:unless="${notice.isPublished}" class="badge badge-secondary">미배포</span>
+                    <span th:if="${faq.isPublished}" class="badge badge-success">배포</span>
+                    <span th:unless="${faq.isPublished}" class="badge badge-secondary">미배포</span>
                 </td>
-                <td th:text="${#temporals.format(notice.createdAt, 'yyyy-MM-dd HH:mm')}">2024-11-28 10:00</td>
+                <td th:text="${#temporals.format(faq.createdAt, 'yyyy-MM-dd HH:mm')}">2024-11-28 10:00</td>
                 <td>
                     <div class="action-buttons">
-                        <a th:href="@{/notices/{id}/edit(id=${notice.id})}" class="btn btn-primary btn-sm">수정</a>
-                        <form th:action="@{/notices/{id}/delete(id=${notice.id})}"
+                        <a th:href="@{/faqs/{id}/edit(id=${faq.id})}" class="btn btn-primary btn-sm">수정</a>
+                        <form th:action="@{/faqs/{id}/delete(id=${faq.id})}"
                               method="post"
                               onsubmit="return confirm('정말 삭제하시겠습니까?')"
                               style="display: inline">

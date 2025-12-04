@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ 상세</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+        }
+
+        .header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .nav-item {
+            padding: 10px 20px;
+            background-color: #34495e;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+            font-weight: 500;
+        }
+
+        .nav-item:hover {
+            background-color: #3498db;
+        }
+
+        .nav-item.active {
+            background-color: #3498db;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .detail-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+
+        .detail-header {
+            padding-bottom: 20px;
+            border-bottom: 2px solid #3498db;
+            margin-bottom: 30px;
+        }
+
+        .question-section {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .badge-category {
+            display: inline-block;
+            padding: 4px 12px;
+            background-color: #9b59b6;
+            color: white;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .question-title {
+            font-size: 24px;
+            color: #2c3e50;
+            flex: 1;
+        }
+
+        .meta-info {
+            display: flex;
+            gap: 20px;
+            color: #7f8c8d;
+            font-size: 14px;
+            margin-top: 15px;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .badge {
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .badge-success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .badge-secondary {
+            background-color: #e2e3e5;
+            color: #383d41;
+        }
+
+        .detail-section {
+            margin-bottom: 30px;
+        }
+
+        .section-label {
+            font-size: 14px;
+            color: #7f8c8d;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .answer-content {
+            font-size: 15px;
+            color: #2c3e50;
+            line-height: 1.8;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            white-space: pre-wrap;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            padding-top: 20px;
+            border-top: 1px solid #ecf0f1;
+        }
+
+        .btn {
+            padding: 10px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.2s;
+        }
+
+        .btn-secondary {
+            background-color: #95a5a6;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #7f8c8d;
+        }
+
+        .btn-primary {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+
+        .btn-danger {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+    </style>
+</head>
+<body>
+<!-- 헤더 (메뉴바) -->
+<div th:replace="~{fragments/header :: header('faqs')}"></div>
+
+<div class="container">
+    <div class="detail-card">
+        <!-- 헤더 -->
+        <div class="detail-header">
+            <div class="question-section">
+                <span class="badge-category" th:text="${faq.category}">수강신청</span>
+                <h2 class="question-title" th:text="${faq.question}">질문 제목</h2>
+            </div>
+            <div class="meta-info">
+                <span class="meta-item">
+                    과정: <span th:text="${faq.course.description}">IT과정</span>
+                </span>
+                <span class="meta-item">
+                    조회수: <span th:text="${faq.viewCount}">0</span>
+                </span>
+                <span class="meta-item">
+                    등록일: <span th:text="${#temporals.format(faq.createdAt, 'yyyy-MM-dd HH:mm')}">2024-11-28 10:00</span>
+                </span>
+                <span class="meta-item">
+                    <span th:if="${faq.isPublished}" class="badge badge-success">배포</span>
+                    <span th:unless="${faq.isPublished}" class="badge badge-secondary">미배포</span>
+                </span>
+            </div>
+        </div>
+
+        <!-- 답변 -->
+        <div class="detail-section">
+            <div class="section-label">답변</div>
+            <div class="answer-content" th:text="${faq.answer}">
+                답변 내용이 여기에 표시됩니다.
+            </div>
+        </div>
+
+        <!-- 버튼 -->
+        <div class="action-buttons">
+            <a href="/faqs" class="btn btn-secondary">목록</a>
+            <a th:href="@{/faqs/{id}/edit(id=${faq.id})}" class="btn btn-primary">수정</a>
+            <form th:action="@{/faqs/{id}/delete(id=${faq.id})}"
+                  method="post"
+                  onsubmit="return confirm('정말 삭제하시겠습니까?')"
+                  style="display: inline">
+                <button type="submit" class="btn btn-danger">삭제</button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

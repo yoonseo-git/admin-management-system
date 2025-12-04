@@ -24,8 +24,11 @@ public interface BannerRepository extends JpaRepository<Banner, Long> { // JpaRe
     @Query("select b from Banner b where " +
             "(:course is null or b.course = :course) and " +
             "(:isDeploy is null or b.isDeploy = :isDeploy) and " +
+            "(:keyword is null or :keyword = '' or b.createdBy = :keyword) and " +
             "b.isDeleted = false " +
             "order by b.createdAt desc ")
-    List<Banner> findByFilters(@Param("course") Course course, @Param("isDeploy") Boolean isDeploy);
+    List<Banner> findByFilters(@Param("course") Course course,
+                               @Param("isDeploy") Boolean isDeploy,
+                               @Param("keyword") String keyword);
 
 }

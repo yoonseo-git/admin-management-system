@@ -1,13 +1,7 @@
 package com.ys.admin_portal.config;
 
-import com.ys.admin_portal.repository.BannerRepository;
-import com.ys.admin_portal.repository.CompanyInterviewRepository;
-import com.ys.admin_portal.repository.NoticeRepository;
-import com.ys.admin_portal.repository.ReviewRepository;
-import com.ys.admin_portal.service.BannerService;
-import com.ys.admin_portal.service.CompanyInterviewService;
-import com.ys.admin_portal.service.NoticeService;
-import com.ys.admin_portal.service.ReviewService;
+import com.ys.admin_portal.repository.*;
+import com.ys.admin_portal.service.*;
 import com.ys.admin_portal.util.FileUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -21,6 +15,7 @@ public class SpringConfig {
     private final ReviewRepository reviewRepository;
     private final CompanyInterviewRepository companyInterviewRepository;
     private final NoticeRepository noticeRepository;
+    private final FaqRepository faqRepository;
 
     @Bean
     public FileUtil fileUtil() {
@@ -45,6 +40,11 @@ public class SpringConfig {
     @Bean
     public NoticeService noticeService() {
         return new NoticeService(noticeRepository);
+    }
+
+    @Bean
+    public FaqService faqService() {
+        return new FaqService(faqRepository);
     }
 
 

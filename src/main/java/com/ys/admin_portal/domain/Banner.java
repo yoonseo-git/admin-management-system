@@ -11,6 +11,8 @@ import java.time.LocalDateTime;
 @Table(name = "banners") // DB테이블 이름을 "banners"로 지정 (생략하면 클래스이름(Banner)을 테이블명으로 사용
 @Getter @Setter // 모든 필드의 getter, setter 자동 생성
 @NoArgsConstructor(access = AccessLevel.PROTECTED) // JPA가 객체 생성할 때 필요, 외부에서 new Banner()막음(직접 생성 방지)
+@AllArgsConstructor
+@Builder
 public class Banner {
 
     @Id // 이 필드가 Primary Key(PK)

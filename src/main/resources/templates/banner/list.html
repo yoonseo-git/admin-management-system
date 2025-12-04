@@ -237,6 +237,14 @@
                 <option value="false" th:selected="${selectedDeploy == false}">미배포</option>
             </select>
 
+            <!-- 검색창 -->
+            <label>검색:</label>
+            <input type="text"
+                   name="keyword"
+                   th:value="${selectedKeyword}"
+                   placeholder="작성자 검색"
+                   style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; width: 200px;">
+
             <button type="submit" class="btn btn-primary">검색</button>
             <a th:href="@{/banners}" class="btn btn-warning">초기화</a>
         </form>

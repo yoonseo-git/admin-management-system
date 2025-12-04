@@ -24,14 +24,16 @@ public class BannerController {
     public String list(
             @RequestParam(value = "course", required = false) Course course,
             @RequestParam(value = "isDeploy", required = false) Boolean isDeploy,
+            @RequestParam(value = "keyword", required = false) String keyword,
             Model model
     ) {
 
-        List<Banner> banners = bannerService.findByFilters(course, isDeploy);
+        List<Banner> banners = bannerService.findByFilters(course, isDeploy, keyword);
 
         model.addAttribute("banners", banners);
         model.addAttribute("selectedCourse", course);
         model.addAttribute("selectedDeploy", isDeploy);
+        model.addAttribute("selectedKeyword", keyword);
 
         return "banner/list";
     }

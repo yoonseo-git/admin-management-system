@@ -39,8 +39,8 @@ public class BannerService {
     }
 
     // 필터링 조회
-    public List<Banner> findByFilters(Course course, Boolean isDeploy) {
-        return bannerRepository.findByFilters(course, isDeploy);
+    public List<Banner> findByFilters(Course course, Boolean isDeploy, String keyword) {
+        return bannerRepository.findByFilters(course, isDeploy, keyword);
     }
 
     // 등록
